@@ -23,16 +23,17 @@
 
             Handlebars = require('handlebars/runtime');
             MediumEditor = require('medium-editor');
+            Angular = require('angular');
             require('jquery-sortable');
             require('blueimp-file-upload');
 
-            factory(jQuery, Handlebars, MediumEditor);
+            factory(jQuery, Handlebars, MediumEditor, Angular);
             return jQuery;
         };
     } else {
         factory(jQuery, Handlebars, MediumEditor);
     }
-}(function ($, Handlebars, MediumEditor) {
+}(function ($, Handlebars, MediumEditor, Angular) {
 
 this["MediumInsert"] = this["MediumInsert"] || {};
 this["MediumInsert"]["Templates"] = this["MediumInsert"]["Templates"] || {};
@@ -2398,7 +2399,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Quiz.prototype.events = function () {
-
+      // Looking at clicks, keydowns, pastes etc
     };
 
     /**
@@ -2419,9 +2420,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Quiz.prototype.add = function () {
-
+        console.log(Angular.module('accolade.lesson'));
+        // I have access to the element through this.el, can inject angular into there.
+        this.core.hideButtons();
     };
-
 
     /** Addon initialization */
 
