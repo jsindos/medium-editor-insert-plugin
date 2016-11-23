@@ -2411,6 +2411,25 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         return this.core;
     };
 
+    Quiz.prototype.setCaretPosition = function(elem, caretPos) {
+        // Source: http://stackoverflow.com/questions/512528/set-cursor-position-in-html-textbox
+        if (elem != null) {
+            if (elem.createTextRange) {
+                var range = elem.createTextRange();
+                range.move('character', caretPos);
+                range.select();
+            }
+            else {
+                if (elem.selectionStart) {
+                    elem.focus();
+                    elem.setSelectionRange(caretPos, caretPos);
+                }
+                else
+                    elem.focus();
+            }
+        }
+    }
+
     /**
      * Add custom content
      *
@@ -2420,14 +2439,21 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
      */
 
     Quiz.prototype.add = function () {
+        var that = this;
         var $place = this.$el.find('.medium-insert-active');
-        Angular.element($place).injector().invoke(function($compile) {
+        Angular.element($place).injector().invoke(function($compile, $timeout) {
             const scope = Angular.element(document.getElementById('editor-container')).scope();
-            $place.html($('<quiz contenteditable="false"/>'));
+            $place.replaceWith('<div class="medium-insert-active" contenteditable="false">' + $place.html() + '</div>');
+            $place = that.$el.find('.medium-insert-active');
+            $place.html($('<quiz/>'));
             $compile($place.contents())(scope);
             scope.$digest();
         });
+        this.setCaretPosition($place.find('.quiz-heading'), 0);
         this.core.hideButtons();
+
+        // Add an empty line after the quiz
+        $(this.templates['src/js/templates/core-empty-line.hbs']().trim()).insertAfter($place);
     };
 
     /** Addon initialization */
