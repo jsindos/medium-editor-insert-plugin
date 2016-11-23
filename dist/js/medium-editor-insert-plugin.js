@@ -2423,11 +2423,10 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         var $place = this.$el.find('.medium-insert-active');
         Angular.element($place).injector().invoke(function($compile) {
             const scope = Angular.element(document.getElementById('editor-container')).scope();
-            $place.html($('<quiz/>'));
+            $place.html($('<quiz contenteditable="false"/>'));
             $compile($place.contents())(scope);
             scope.$digest();
         });
-        // I have access to the element through this.el, can inject angular into there.
         this.core.hideButtons();
     };
 
