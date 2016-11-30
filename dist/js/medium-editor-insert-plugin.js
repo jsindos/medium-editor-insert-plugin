@@ -2441,14 +2441,13 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Quiz.prototype.add = function () {
         var that = this;
         var $place = this.$el.find('.medium-insert-active');
-        Angular.element($place).injector().invoke(function($compile, QuizList) {
+        Angular.element($place).injector().invoke(function($compile) {
             const scope = Angular.element(document.getElementById('editor-container')).scope();
             $place.replaceWith('<div class="medium-insert-active" contenteditable="false">' + $place.html() + '</div>');
             $place = that.$el.find('.medium-insert-active');
             $place.html($('<quiz/>'));
-            const $quiz = $compile($place.contents())(scope);
+            $compile($place.contents())(scope);
             scope.$digest();
-            QuizList.registerQuiz($quiz);
         });
         this.setCaretPosition($place.find('.quiz-heading'), 0);
         this.core.hideButtons();
