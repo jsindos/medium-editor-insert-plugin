@@ -2445,7 +2445,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             const scope = Angular.element(document.getElementById('editor')).scope();
             $place.replaceWith('<div class="medium-insert-active" contenteditable="false">' + $place.html() + '</div>');
             $place = that.$el.find('.medium-insert-active');
-            $place.html($('<quiz/>'));
+            $place.html($('<quiz-creator/>'));
             $compile($place.contents())(scope);
             scope.$digest();
         });
