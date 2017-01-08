@@ -475,7 +475,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         }
 
         if (this.$el.children().length === 0) {
-            this.$el.html(this.templates['src/js/templates/core-empty-line.hbs']().trim());
+            // this.$el.html(this.templates['src/js/templates/core-empty-line.hbs']().trim());
         }
 
         // Fix #29
