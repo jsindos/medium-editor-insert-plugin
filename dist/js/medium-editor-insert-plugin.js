@@ -2437,9 +2437,12 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         if (quizzes.length) {
           for (var i = 0; i < quizzes.length; i++) {
             $parent = quizzes[i].closest('.medium-insert-quiz');
-            $parent.remove();
+            // See https://docs.angularjs.org/api/ng/function/angular.injector
+            Angular.element($parent).injector().invoke(function($rootScope) {
+              $rootScope.$emit('deleteQuiz', quizzes[i].attr('id'));
+            });
+            // $parent.remove();
           }
-
           e.preventDefault();
         }
       }
