@@ -1393,6 +1393,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
             $embed = this.$el.find('.medium-insert-embeds-selected');
 
             if ($embed.length) {
+              console.log('hello!');
                 e.preventDefault();
 
                 $('.medium-insert-embeds-toolbar, .medium-insert-embeds-toolbar2').remove();
@@ -2400,7 +2401,49 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
 
     Quiz.prototype.events = function () {
       // Looking at clicks, keydowns, pastes etc
+      $(document)
+        .on('keydown', $.proxy(this, 'removeQuiz'));
     };
+
+    Quiz.prototype.removeQuiz = function(e) {
+      // Give confirmation to remove quiz if backspace/del is pressed in text
+      var quizzes = [],
+          selection, range, current, $current, $sibling, caretPosition, $parent;
+
+      if (e.which === 8 || e.which === 46) {
+
+        selection = window.getSelection();
+        if (selection && selection.rangeCount) {
+          range = selection.getRangeAt(0);
+          current = range.commonAncestorContainer;
+          $current = current.nodeName === '#text' ? $(current).parent() : $(current);
+          caretPosition = MediumEditor.selection.getCaretOffsets(current).left;
+
+          // Is backspace pressed and caret is at the beginning of a paragraph, get previous element
+          if (e.which === 8 && caretPosition === 0) {
+              $sibling = $current.prev();
+          // Is del pressed and caret is at the end of a paragraph, get next element
+          } else if (e.which === 46 && caretPosition === $current.text().length) {
+              $sibling = $current.next();
+          }
+
+          if ($sibling && $sibling.hasClass('medium-insert-quiz')) {
+              quizzes.push($sibling.find('quiz-creator'));
+          }
+
+          // Add code for selection as well here. 
+        }
+
+        if (quizzes.length) {
+          for (var i = 0; i < quizzes.length; i++) {
+            $parent = quizzes[i].closest('.medium-insert-quiz');
+            $parent.remove();
+          }
+
+          e.preventDefault();
+        }
+      }
+    }
 
     /**
      * Get the Core object
@@ -2443,7 +2486,7 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
         var $place = this.$el.find('.medium-insert-active');
         Angular.element($place).injector().invoke(function($compile) {
             const scope = Angular.element(document.getElementById('editor')).scope();
-            $place.replaceWith('<div class="medium-insert-active" contenteditable="false">' + $place.html() + '</div>');
+            $place.replaceWith('<div class="medium-insert-active medium-insert-quiz" contenteditable="false">' + $place.html() + '</div>');
             $place = that.$el.find('.medium-insert-active');
             $place.html($('<quiz-creator/>'));
             $compile($place.contents())(scope);
