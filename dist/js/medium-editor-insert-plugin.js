@@ -2438,9 +2438,9 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
           for (var i = 0; i < quizzes.length; i++) {
             $parent = quizzes[i].closest('.medium-insert-quiz');
             // See https://docs.angularjs.org/api/ng/function/angular.injector
-            Angular.element($parent).injector().invoke(function($rootScope) {
+            Angular.element($parent).injector().invoke(['$rootScope', function($rootScope) {
               $rootScope.$emit('deleteQuiz', quizzes[i].attr('id'));
-            });
+            }]);
             // $parent.remove();
           }
           e.preventDefault();
@@ -2487,14 +2487,14 @@ this["MediumInsert"]["Templates"]["src/js/templates/images-toolbar.hbs"] = Handl
     Quiz.prototype.add = function () {
         var that = this;
         var $place = this.$el.find('.medium-insert-active');
-        Angular.element($place).injector().invoke(function($compile) {
+        Angular.element($place).injector().invoke(['$compile', function($compile) {
             const scope = Angular.element(document.getElementById('editor')).scope();
             $place.replaceWith('<div class="medium-insert-active medium-insert-quiz" contenteditable="false">' + $place.html() + '</div>');
             $place = that.$el.find('.medium-insert-active');
             $place.html($('<quiz-creator/>'));
             $compile($place.contents())(scope);
             scope.$digest();
-        });
+        }]);
         this.setCaretPosition($place.find('.quiz-heading'), 0);
         this.core.hideButtons();
 
